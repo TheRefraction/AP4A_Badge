@@ -13,15 +13,14 @@ public:
     Reader(Server& s);
     Reader(Server& s, std::string n);
 
-    friend std::ostream& operator<<(std::ostream& o, Reader& s)
+    friend std::ostream& operator<<(std::ostream& o, Reader& r)
     {
-
+        o << r.get_name();
 
         return o;
     }
     // Getters
     std::string_view get_name();
-
     badge::SECURITY_LEVEL get_level() const;
     bool is_enabled() const;
     //Setters
