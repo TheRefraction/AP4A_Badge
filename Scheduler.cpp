@@ -13,7 +13,7 @@ void Scheduler::run() {
     if (running) {
         for (auto &s : servers) {
             std::cout << s << std::endl;
-            if (s.is_running()) {
+            if (s.isRunning()) {
                 simulate(s);
             }
         }
@@ -29,6 +29,6 @@ void Scheduler::simulate(Server &s) {
 }
 
 
-bool Scheduler::is_running() {
-    return this->running;
+bool Scheduler::isRunning() {
+    return running;
 }

@@ -12,16 +12,8 @@ std::string_view Reader::get_name() {
     return this->name;
 }
 
-badge::SECURITY_LEVEL Reader::get_level() const {
-    return this->level;
-}
-
 bool Reader::is_enabled() const {
     return this->enabled;
-}
-
-void Reader::set_level(const badge::SECURITY_LEVEL l) {
-    this->level = l;
 }
 
 void Reader::enable(const bool en) {

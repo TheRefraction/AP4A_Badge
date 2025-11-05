@@ -3,11 +3,33 @@
 
 namespace badge {
     typedef enum {
-        PUBLIC = 0,
-        PROTECTED = 1,
-        PRIVATE = 2,
+        STUDENT = 0,
+        TEACHER = 1,
+        DOCTOR = 2,
+        CLEANUP = 3,
+        STAFF = 4,
+        GUEST = 5,
         UNKNOWN = -1
-    } SECURITY_LEVEL;
+    } PERSON_TYPE;
+
+    inline std::string_view getTypeName(const PERSON_TYPE type) {
+        switch (type) {
+            case STUDENT:
+                return "Student";
+            case TEACHER:
+                return "Teacher";
+            case DOCTOR:
+                return "Doctor";
+            case CLEANUP:
+                return "Cleanup staff";
+            case STAFF:
+                return "Staff";
+            case GUEST:
+                return "Guest";
+            default:
+                return "Unknown";
+        }
+    }
 }
 
 #endif

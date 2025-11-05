@@ -9,17 +9,17 @@ Server::Server(std::string n): name(std::move(n)), running(false) {
 }
 
 void Server::start() {
-    this->running = true;
+    running = true;
 }
 
 void Server::stop() {
-    this->running = false;
+    running = false;
 }
 
-std::string_view Server::get_name() {
-    return this->name;
+std::string_view Server::getName() {
+    return name;
 }
 
-bool Server::is_running() const {
-    return this->running;
+bool Server::isRunning() const {
+    return running;
 }

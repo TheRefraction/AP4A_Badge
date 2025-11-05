@@ -4,13 +4,9 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
-#include <vector>
-
-#include "Reader.h"
 
 class Server {
     std::string name;
-    std::vector<Reader> readers;
     bool running;
 public:
     Server();
@@ -18,13 +14,8 @@ public:
 
     friend std::ostream& operator<<(std::ostream& o, Server& s)
     {
-        std::cout << "Server " << s.get_name() << ":\n";
-        std::cout << "Running: " << s.is_running() << "\n";
-        std::cout << "Loaded Readers:\n";
-
-        for (auto &r : s.readers) {
-            std::cout << std::setw(16) << r << std::endl;
-        }
+        o << "Server " << s.getName() << ":\n";
+        o << "Running: " << s.isRunning() << "\n";
 
         return o;
     }
@@ -32,8 +23,8 @@ public:
     void start();
     void stop();
     // Getters
-    std::string_view get_name();
-    bool is_running() const;
+    std::string_view getName();
+    bool isRunning() const;
 };
 
 

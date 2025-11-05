@@ -6,13 +6,25 @@ set(CMAKE_CXX_STANDARD 17)
 add_executable(AP4A_Projet main.cpp
         Server.cpp
         Server.h
-        Badge.cpp
-        Badge.h
-        Reader.cpp
-        Reader.h
+        old/Badge_old.cpp
+        old/Badge_old.h
+        old/Reader.cpp
+        old/Reader.h
         Scheduler.cpp
         Scheduler.h
-        Person.cpp
-        Person.h
-        const.h)
+        Person/IPerson.h
+        Person/Student.cpp
+        Person/Student.h
+        Badge/IBadge.h
+        const.h
+        Badge/StudentBadge.cpp
+        Badge/StudentBadge.h
+        Reader/IReader.h
+        Badge/Badge.cpp
+        Badge/Badge.h
+        Reader/BuildingReader.cpp
+        Reader/BuildingReader.h
+        Reader/RoomReader.cpp
+        Reader/RoomReader.h
+)
 add_compile_options(-Wall -Wextra -Wpedantic -Wshadow -pedantic-errors)

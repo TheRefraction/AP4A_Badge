@@ -15,7 +15,7 @@ public:
     void run();
     void simulate(Server& s);
 
-    bool is_running();
+    bool isRunning();
 };
 
 
