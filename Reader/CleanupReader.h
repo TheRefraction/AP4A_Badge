@@ -1,9 +1,9 @@
-#ifndef __BUILDINGREADER_H
-#define __BUILDINGREADER_H
+#ifndef _CLEANUPREADER_H
+#define _CLEANUPREADER_H
 
 #include "Reader.h"
 
-class BuildingReader : public Reader {
+class CleanupReader : public Reader {
 public:
     badge::CLEARANCE_LEVEL getType() const override;
 };

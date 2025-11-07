@@ -11,7 +11,7 @@ public:
     virtual int getId() const = 0;
     virtual IPerson& getOwner() const = 0;
     virtual std::chrono::system_clock::time_point getDate() const = 0;
-    virtual TimeSlot& getAccessTimeSlot() const = 0; /// ???
+    virtual TimeSlot& getAccessTimeSlot() = 0;
     virtual std::set<int> getPermissions() const = 0;
 
     virtual bool hasPermission(int perm) const = 0;

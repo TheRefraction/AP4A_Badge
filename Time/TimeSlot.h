@@ -5,9 +5,10 @@
 #include <string>
 
 class TimeSlot {
+public:
     std::chrono::system_clock::time_point start;
     std::chrono::system_clock::time_point end;
-public:
+
     TimeSlot(const std::string& startStr, const std::string& endStr);
 
     std::string toString() const;

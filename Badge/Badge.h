@@ -7,15 +7,15 @@ class Badge : public IBadge{
         int id;
         IPerson& owner;
         std::chrono::system_clock::time_point date;
-        TimeSlot& timeSlot;
+        TimeSlot timeSlot;
         std::set<int> permissions;
     public:
-        Badge(int id, IPerson &o, TimeSlot& ts);
+        Badge(int id, IPerson &o, const TimeSlot& ts);
 
         int getId() const override;
         IPerson& getOwner() const override;
         std::chrono::system_clock::time_point getDate() const override;
-        TimeSlot& getAccessTimeSlot() const override;
+        TimeSlot& getAccessTimeSlot() override;
         std::set<int> getPermissions() const override;
 
         bool hasPermission(int perm) const override;

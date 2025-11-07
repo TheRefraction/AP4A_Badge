@@ -4,10 +4,10 @@ project(AP4A_Projet)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(AP4A_Projet main.cpp
-        Server.cpp
-        Server.h
-        Scheduler.cpp
-        Scheduler.h
+        Server/Server.cpp
+        Server/Server.h
+        Server/Scheduler.cpp
+        Server/Scheduler.h
         Person/IPerson.h
         Person/Student.cpp
         Person/Student.h
@@ -34,5 +34,17 @@ add_executable(AP4A_Projet main.cpp
         Person/CleanupStaff.h
         Person/Staff.cpp
         Person/Staff.h
+        File/fileLib.cpp
+        File/fileLib.h
+        Reader/Reader.cpp
+        Reader/Reader.h
+        Reader/LabReader.cpp
+        Reader/LabReader.h
+        Reader/CleanupReader.cpp
+        Reader/CleanupReader.h
+        Reader/TeacherReader.cpp
+        Reader/TeacherReader.h
+        Reader/StaffReader.cpp
+        Reader/StaffReader.h
 )
 add_compile_options(-Wall -Wextra -Wpedantic -Wshadow -pedantic-errors)

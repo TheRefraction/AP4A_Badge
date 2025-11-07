@@ -1,6 +1,6 @@
 #include "Badge.h"
 
-Badge::Badge(const int id, IPerson &o, TimeSlot &ts) : id(id), owner(o), date(), timeSlot(ts) {
+Badge::Badge(const int id, IPerson &o, const TimeSlot &ts) : id(id), owner(o), timeSlot(ts) {
 }
 
 int Badge::getId() const {
@@ -15,7 +15,7 @@ std::chrono::system_clock::time_point Badge::getDate() const {
     return date;
 }
 
-TimeSlot& Badge::getAccessTimeSlot() const {
+TimeSlot& Badge::getAccessTimeSlot() {
     return timeSlot;
 }
 
