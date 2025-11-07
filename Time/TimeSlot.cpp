@@ -17,6 +17,10 @@ bool TimeSlot::overlaps(const TimeSlot& o) const {
     return (start < o.end) && (o.start < end);
 }
 
-bool TimeSlot::contains(const std::chrono::system_clock::time_point& t) const {
-    return (t >= start) && (t < end);
+bool TimeSlot::contains(const std::chrono::system_clock::time_point& tp) const {
+    int t = secondsSinceMidnight(tp);
+    int s = secondsSinceMidnight(start);
+    int e = secondsSinceMidnight(end);
+
+    return s <= t && t <= e;
 }

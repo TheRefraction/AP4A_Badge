@@ -20,13 +20,20 @@
 
 #include "Server.h"
 
-Server::Server(): name("Default"), running(false), errorId(badge::ERR_NONE) {
+Server::Server(): Server("Default") {
 }
 
-Server::Server(std::string n): name(std::move(n)), running(false), errorId(badge::ERR_NONE) {
+Server::Server(std::string n): name(std::move(n)), running(false), errorId(badge::ERR_NONE), bufferId{-1, -1} {
+}
+
+Server::~Server() {
+    stop();
 }
 
 bool Server::queryAccess(const unsigned int badgeID, const unsigned int readerID) {
+    bufferId[0] = badgeID;
+    bufferId[1] = readerID;
+
     if (badges.find(badgeID) == badges.end()) {
         errorId = badge::ERR_UNK_BADGE;
         return false;
@@ -58,12 +65,16 @@ bool Server::queryAccess(const unsigned int badgeID, const unsigned int readerID
         return false;
     }
 
-    TimeSlot& readerTime = reader->getAccessTimeSlot();
+    // The following is commented out for this uses Real Time,
+    // and so it would always return false if this program is ran
+    // during the night for instance.
+
+    /*TimeSlot& readerTime = reader->getAccessTimeSlot();
 
     if (!readerTime.contains(currentTime)) {
         errorId = badge::ERR_READER_TIME;
         return false;
-    }
+    }*/
 
     return true;
 }
@@ -72,7 +83,7 @@ bool Server::queryAccess(const IBadge &badge, const IReader &reader) {
     return queryAccess(badge.getId(), reader.getId());
 }
 
-std::string_view Server::getName() {
+const std::string& Server::getName() const {
     return name;
 }
 
@@ -199,17 +210,24 @@ void Server::start() {
     }
     configFile.close();
 
-    //
+    // Check here if badges and readers are empty, if one is raise an error
+    if (badges.empty() || readers.empty()) {
+        throw("Wrong config file!");
+    }
 
     running = true;
 }
 
 void Server::stop() {
-
+    readers.clear();
+    badges.clear();
+    clearError();
 
     running = false;
 }
 
 void Server::clearError() {
+    bufferId[0] = -1;
+    bufferId[1] = -1;
     errorId = badge::ERR_NONE;
 }

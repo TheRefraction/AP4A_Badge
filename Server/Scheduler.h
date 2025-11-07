@@ -2,18 +2,22 @@
 #define __SCHEDULER_H
 
 #include <vector>
+#include <memory>
 
 #include "Server.h"
 
 class Scheduler {
-    std::vector<Server> servers;
+    std::vector<std::shared_ptr<Server>> servers;
     bool running;
+    unsigned int numSimulations;
+    unsigned int sleepTime;
 public:
-    Scheduler();
+    Scheduler(unsigned int n, unsigned int s);
 
     void start();
     void run();
-    void simulate(Server& s);
+    int randomInt(int max);
+    void simulate(const std::shared_ptr<Server>& s);
 
     bool isRunning();
 };

@@ -6,6 +6,6 @@
 
 std::chrono::system_clock::time_point parseDateTime(const std::string& s);
 std::string formatDateTime(const std::chrono::system_clock::time_point& tp);
-
+int secondsSinceMidnight(const std::chrono::system_clock::time_point& tp);
 
 #endif

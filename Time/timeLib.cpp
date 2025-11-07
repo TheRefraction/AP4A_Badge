@@ -27,3 +27,16 @@ std::string formatDateTime(const std::chrono::system_clock::time_point& tp) {
     ss << std::put_time(&tm, "%Y-%m-%d %H:%M");
     return ss.str();
 }
+
+int secondsSinceMidnight(const std::chrono::system_clock::time_point& tp) {
+    std::time_t t = std::chrono::system_clock::to_time_t(tp);
+
+    std::tm local{};
+#ifdef _WIN32
+    localtime_s(&local, &t);
+#else
+    localtime_r(&t, &local);
+#endif
+
+    return local.tm_hour * 3600 + local.tm_min * 60  + local.tm_sec;
+}

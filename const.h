@@ -38,8 +38,22 @@ namespace badge {
         ERR_READER_DISABLED = 5
     } SERVER_QUERY_ERROR;
 
-    inline auto getTypeName(const SERVER_QUERY_ERROR err) -> std::string_view {
+    inline auto getErrorName(const SERVER_QUERY_ERROR err) -> std::string_view {
         switch (err) {
+            case ERR_NONE:
+                return "None";
+            case ERR_UNK_BADGE:
+                return "Unknown badge";
+            case ERR_UNK_READER:
+                return "Unknown reader";
+            case ERR_EXPIRED_DATE:
+                return "Badge has expired";
+            case ERR_CLEARANCE:
+                return "Low clearance level";
+            case ERR_READER_TIME:
+                return "Reader is time-disabled";
+            case ERR_READER_DISABLED:
+                return "Reader is disabled";
             default:
                 return "Unknown error";
         }

@@ -14,7 +14,7 @@ public:
     std::string toString() const;
 
     bool overlaps(const TimeSlot &o) const;
-    bool contains(const std::chrono::system_clock::time_point& t) const;
+    bool contains(const std::chrono::system_clock::time_point& tp) const;
 };
 
 
