@@ -32,6 +32,7 @@ Server::~Server() {
 }
 
 bool Server::queryAccess(const unsigned int badgeID, const unsigned int readerID) {
+    // Store IDs for future <<
     bufferId[0] = badgeID;
     bufferId[1] = readerID;
 
@@ -104,6 +105,8 @@ std::map<unsigned int, std::shared_ptr<IBadge>>& Server::getBadges() {
     return badges;
 }
 
+// This method first parses badges and people, then readers
+// If it fails an exception is thrown
 void Server::start() {
     std::ifstream configFile;
     configFile.open("s_" + name + ".txt");
@@ -116,6 +119,7 @@ void Server::start() {
     std::string line;
 
     while (std::getline(configFile, line)) {
+        // Goes to part 2
         if (line == ";") {
             con = true;
             continue;
@@ -125,6 +129,7 @@ void Server::start() {
         std::string word;
         std::vector<std::string> tokens;
 
+        // Split the line into a vector
         while (std::getline(ss, word, ';')) {
             tokens.push_back(word);
         }
@@ -134,6 +139,7 @@ void Server::start() {
                 throw std::runtime_error("Wrong config file");
             }
 
+            // Recover parameters
             std::string readerName = tokens.at(0);
             auto readerLevel = static_cast<badge::CLEARANCE_LEVEL>(std::stol(tokens.at(1)));
             unsigned int readerId = std::stoul(tokens.at(2));
@@ -141,6 +147,7 @@ void Server::start() {
             std::string readerStart = tokens.at(4);
             std::string readerEnd = tokens.at(5);
 
+            // Add the right security level to the reader
             std::shared_ptr<IReader> reader;
             switch (readerLevel) {
                 case badge::CLEARANCE_LEVEL::STUDENT:
@@ -172,11 +179,13 @@ void Server::start() {
                 throw std::runtime_error("Wrong config file");
             }
 
+            // Retrieve parameters from the line
             std::string personName = tokens.at(0);
             auto personLevel = static_cast<badge::CLEARANCE_LEVEL>(std::stol(tokens.at(1)));
             unsigned int badgeId = std::stoul(tokens.at(2));
             std::chrono::system_clock::time_point badgeDate = parseDateTime(tokens.at(3));
 
+            // Add the right security level
             std::shared_ptr<IPerson> person;
             switch (personLevel) {
                 case badge::CLEARANCE_LEVEL::STUDENT:
@@ -201,6 +210,7 @@ void Server::start() {
             auto badge = std::make_shared<Badge>(badgeId, person);
             badge->setDate(badgeDate);
 
+            // Add custom reader permissions
             for (auto it = tokens.begin() + 4; it != tokens.end(); ++it) {
                 unsigned int permId = std::stoul(*it);
                 badge->addPermission(permId);
@@ -216,10 +226,12 @@ void Server::start() {
         throw std::runtime_error("Wrong config file!");
     }
 
+    // Enable the server
     running = true;
 }
 
 void Server::stop() {
+    // Must destroy and clear everything to allow shared pointers to be dropped
     readers.clear();
     badges.clear();
     clearError();

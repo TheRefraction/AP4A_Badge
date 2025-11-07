@@ -1,5 +1,5 @@
 compilation_database_dir: cmake-build-debug
-output_directory: diagrams
+output_directory: docs
 diagrams:
   myproject_class:
     type: class

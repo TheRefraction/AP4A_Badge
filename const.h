@@ -1,7 +1,9 @@
 #ifndef __CONST_H
 #define __CONST_H
 
+// Namespace defined to avoid collisions
 namespace badge {
+    // Enum for clearance used according to IReader and IPerson
     enum class CLEARANCE_LEVEL {
         STUDENT = 0,
         TEACHER = 1,
@@ -11,6 +13,7 @@ namespace badge {
         UNKNOWN = -1
     };
 
+    // Helper function that prints what the Clearance level means
     inline auto getTypeName(CLEARANCE_LEVEL type) -> std::string_view {
         switch (type) {
             case CLEARANCE_LEVEL::STUDENT:
@@ -28,6 +31,7 @@ namespace badge {
         }
     }
 
+    // Enum for error code used according in Server
     enum class SERVER_QUERY_ERROR {
         ERR_NONE = -1,
         ERR_UNK_BADGE = 0,
@@ -38,6 +42,7 @@ namespace badge {
         ERR_READER_DISABLED = 5
     };
 
+    // Helper function that prints what a server error code means
     inline auto getErrorName(const SERVER_QUERY_ERROR err) -> std::string_view {
         switch (err) {
             case SERVER_QUERY_ERROR::ERR_NONE:

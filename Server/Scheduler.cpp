@@ -11,6 +11,7 @@ Scheduler::Scheduler(const unsigned int n, const unsigned int s): running(false)
 void Scheduler::start() {
     std::cout << "Starting Scheduler...\n";
 
+    // Load servers
     std::ifstream configFile;
     configFile.open("servers.txt");
 
@@ -18,12 +19,19 @@ void Scheduler::start() {
         std::string line;
 
         while (std::getline(configFile, line)) {
-            servers.push_back(std::make_shared<Server>(line));
+            // Prevent two servers from having the same name
+            bool skip = false;
+            for (auto &server : servers) {
+                if (server->getName() == line) skip = true;
+            }
+
+            if (!skip) servers.push_back(std::make_shared<Server>(line));
         }
 
         configFile.close();
     } else throw std::runtime_error("File servers.txt could not be open");
 
+    // Start each server
     for (auto &server : servers) {
         server->start();
     }
@@ -35,6 +43,7 @@ void Scheduler::start() {
 
 void Scheduler::run() {
     if (running) {
+        // Simulate each server if running
         for (const auto& s : servers) {
             if (s->isRunning()) {
                 simulate(s);
@@ -50,6 +59,7 @@ void Scheduler::run() {
     }
 }
 
+// Retrieve a random key from an ordered map
 template<typename K, typename V> K Scheduler::randomKey(const std::map<K,V>& m) {
     if (m.empty()) throw std::runtime_error("Map is empty");
 
@@ -66,12 +76,13 @@ template<typename K, typename V> K Scheduler::randomKey(const std::map<K,V>& m) 
 }
 
 void Scheduler::simulate(const std::shared_ptr<Server>& s) {
-    // size() est en O(1)
+    // size() is O(1)
     const unsigned int badgeId = randomKey(s->getBadges());
     const unsigned int readerId = randomKey(s->getReaders());
 
     bool success = s->queryAccess(badgeId, readerId);
 
+    // Write to logs
     std::string prefix = success ? "log_s_" : "log_f_";
     std::string fileName = prefix + s->getName() + ".log";
     std::ofstream file(fileName, std::ios::out | std::ios::app);
@@ -86,9 +97,9 @@ void Scheduler::simulate(const std::shared_ptr<Server>& s) {
 
     std::cout << *s;
 
+    // Clear error once acquisition is done
     s->clearError();
 }
-
 
 bool Scheduler::isRunning() {
     return running;
