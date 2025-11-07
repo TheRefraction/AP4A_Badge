@@ -3,7 +3,8 @@
 
 #include "Badge.h"
 
-class StudentBadge : public Badge{
+class StudentBadge : public Badge {
+public:
 };
 
 

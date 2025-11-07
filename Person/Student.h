@@ -8,7 +8,7 @@ class Student : public IPerson {
 public:
     Student(std::string name);
 
-    badge::PERSON_TYPE getType() const override;
+    badge::CLEARANCE_LEVEL getType() const override;
     std::string_view getName() const override;
 };
 

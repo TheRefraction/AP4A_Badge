@@ -20,11 +20,11 @@ add_executable(AP4A_Projet main.cpp
         Badge/StudentBadge.cpp
         Badge/StudentBadge.h
         Reader/IReader.h
-        Badge/Badge.cpp
-        Badge/Badge.h
         Reader/BuildingReader.cpp
         Reader/BuildingReader.h
         Reader/RoomReader.cpp
         Reader/RoomReader.h
+        Badge/Badge.cpp
+        Badge/Badge.h
 )
 add_compile_options(-Wall -Wextra -Wpedantic -Wshadow -pedantic-errors)

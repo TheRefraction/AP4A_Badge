@@ -2,7 +2,7 @@
 #define __CONST_H
 
 namespace badge {
-    typedef enum {
+    const typedef enum {
         STUDENT = 0,
         TEACHER = 1,
         DOCTOR = 2,
@@ -10,9 +10,9 @@ namespace badge {
         STAFF = 4,
         GUEST = 5,
         UNKNOWN = -1
-    } PERSON_TYPE;
+    } CLEARANCE_LEVEL;
 
-    inline std::string_view getTypeName(const PERSON_TYPE type) {
+    inline std::string_view getTypeName(CLEARANCE_LEVEL type) {
         switch (type) {
             case STUDENT:
                 return "Student";

@@ -13,12 +13,11 @@ int main() {
     Scheduler scheduler;
     scheduler.start();
 
-    while (scheduler.is_running()) {
+    while (scheduler.isRunning()) {
         scheduler.run();
     }
 
     std::cout << "Done!" << std::endl;
-
 
     return EXIT_SUCCESS;
 }

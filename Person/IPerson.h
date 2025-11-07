@@ -8,7 +8,7 @@
 class IPerson {
 public:
     virtual std::string_view getName() const = 0;
-    virtual badge::PERSON_TYPE getType() const = 0;
+    virtual badge::CLEARANCE_LEVEL getType() const = 0;
     virtual ~IPerson() = default;
 };
 
