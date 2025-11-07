@@ -1,10 +1,9 @@
 #include "Reader.h"
 
-Reader::Reader(const int id, std::string name, const TimeSlot &ts) : id(id), name(std::move(name)), enabled(false),
-                                                                     timeSlot(ts) {
+Reader::Reader(const unsigned int id, std::string name, std::string startTime, std::string endTime) : id(id), name(std::move(name)), enabled(false), timeSlot(startTime, endTime){
 }
 
-int Reader::getId() const {
+unsigned int Reader::getId() const {
     return id;
 }
 
@@ -16,7 +15,7 @@ badge::CLEARANCE_LEVEL Reader::getType() const {
     return badge::CLEARANCE_LEVEL::UNKNOWN;
 }
 
-TimeSlot & Reader::getAccessTimeSlot() {
+TimeSlot& Reader::getAccessTimeSlot() {
     return timeSlot;
 }
 

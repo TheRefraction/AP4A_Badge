@@ -8,7 +8,7 @@
 
 class IReader {
 public:
-    virtual int getId() const = 0;
+    virtual unsigned int getId() const = 0;
     virtual std::string_view getName() const = 0;
     virtual badge::CLEARANCE_LEVEL getType() const = 0;
     virtual TimeSlot& getAccessTimeSlot() = 0;

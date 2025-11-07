@@ -5,7 +5,8 @@
 
 class CleanupStaff : public Person {
 public:
-    badge::CLEARANCE_LEVEL getType() const override;
+    CleanupStaff(std::string name) : Person(std::move(name)) {}
+    badge::CLEARANCE_LEVEL getType() const override {return badge::CLEARANCE_LEVEL::CLEANUP;}
 };
 
 

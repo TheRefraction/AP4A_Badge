@@ -4,14 +4,14 @@
 #include "IReader.h"
 
 class Reader : public IReader {
-    int id;
+    unsigned int id;
     std::string name;
     bool enabled;
     TimeSlot timeSlot;
 public:
-    Reader(int id, std::string name, const TimeSlot &ts);
+    Reader(unsigned int id, std::string name, std::string startTime, std::string endTime);
 
-    int getId() const override;
+    unsigned int getId() const override;
     std::string_view getName() const override;
     badge::CLEARANCE_LEVEL getType() const override;
     TimeSlot& getAccessTimeSlot() override;

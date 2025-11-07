@@ -27,6 +27,23 @@ namespace badge {
                 return "Unknown";
         }
     }
+
+    typedef enum {
+        ERR_NONE = -1,
+        ERR_UNK_BADGE = 0,
+        ERR_UNK_READER = 1,
+        ERR_EXPIRED_DATE = 2,
+        ERR_CLEARANCE = 3,
+        ERR_READER_TIME = 4,
+        ERR_READER_DISABLED = 5
+    } SERVER_QUERY_ERROR;
+
+    inline auto getTypeName(const SERVER_QUERY_ERROR err) -> std::string_view {
+        switch (err) {
+            default:
+                return "Unknown error";
+        }
+    }
 }
 
 #endif

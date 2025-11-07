@@ -1,13 +1,15 @@
 #include "Badge.h"
 
-Badge::Badge(const int id, IPerson &o, const TimeSlot &ts) : id(id), owner(o), timeSlot(ts) {
+#include <utility>
+
+Badge::Badge(const unsigned int id, std::shared_ptr<IPerson> o) : id(id), owner(std::move(o)) {
 }
 
-int Badge::getId() const {
+unsigned int Badge::getId() const {
     return id;
 }
 
-IPerson& Badge::getOwner() const {
+std::shared_ptr<IPerson> Badge::getOwner() const {
     return owner;
 }
 
@@ -15,23 +17,19 @@ std::chrono::system_clock::time_point Badge::getDate() const {
     return date;
 }
 
-TimeSlot& Badge::getAccessTimeSlot() {
-    return timeSlot;
-}
-
-std::set<int> Badge::getPermissions() const {
+std::set<unsigned int> Badge::getPermissions() const {
     return permissions;
 }
 
-bool Badge::hasPermission(const int perm) const {
+bool Badge::hasPermission(const unsigned int perm) const {
     return permissions.find(perm) != permissions.end();
 }
 
-void Badge::addPermission(const int perm) {
+void Badge::addPermission(const unsigned int perm) {
     permissions.insert(perm);
 }
 
-void Badge::removePermission(const int perm) {
+void Badge::removePermission(const unsigned int perm) {
     permissions.erase(perm);
 }
 
