@@ -23,7 +23,7 @@
 Server::Server(): Server("Default") {
 }
 
-Server::Server(std::string n): name(std::move(n)), running(false), errorId(badge::ERR_NONE), bufferId{-1, -1} {
+Server::Server(std::string n): name(std::move(n)), running(false), errorId(badge::SERVER_QUERY_ERROR::ERR_NONE), bufferId{-1, -1} {
 }
 
 Server::~Server() {
@@ -35,12 +35,12 @@ bool Server::queryAccess(const unsigned int badgeID, const unsigned int readerID
     bufferId[1] = readerID;
 
     if (badges.find(badgeID) == badges.end()) {
-        errorId = badge::ERR_UNK_BADGE;
+        errorId = badge::SERVER_QUERY_ERROR::ERR_UNK_BADGE;
         return false;
     }
 
     if (readers.find(readerID) == readers.end()) {
-        errorId = badge::ERR_UNK_READER;
+        errorId = badge::SERVER_QUERY_ERROR::ERR_UNK_READER;
         return false;
     }
 
@@ -49,19 +49,19 @@ bool Server::queryAccess(const unsigned int badgeID, const unsigned int readerID
     std::shared_ptr<IPerson> person = badge->getOwner();
 
     if (!reader->isEnabled()) {
-        errorId = badge::ERR_READER_DISABLED;
+        errorId = badge::SERVER_QUERY_ERROR::ERR_READER_DISABLED;
         return false;
     }
 
     std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
     if (currentTime >= badge->getDate()) {
-        errorId = badge::ERR_EXPIRED_DATE;
+        errorId = badge::SERVER_QUERY_ERROR::ERR_EXPIRED_DATE;
         return false;
     }
 
     if (person->getType() < reader->getType() && !badge->hasPermission(readerID)) {
-        errorId = badge::ERR_CLEARANCE;
+        errorId = badge::SERVER_QUERY_ERROR::ERR_CLEARANCE;
         return false;
     }
 
@@ -108,7 +108,7 @@ void Server::start() {
     configFile.open("s_" + name + ".txt");
 
     if (!configFile.is_open()) {
-        throw("Could not open file " + name + ".txt");
+        throw std::runtime_error("Could not open file s_" + name + ".txt");
     }
 
     bool con = false;
@@ -130,11 +130,11 @@ void Server::start() {
 
         if (con) { // Set the readers up
             if (tokens.size() != 6) {
-                throw("Wrong config file");
+                throw std::runtime_error("Wrong config file");
             }
 
             std::string readerName = tokens.at(0);
-            badge::CLEARANCE_LEVEL readerLevel = static_cast<badge::CLEARANCE_LEVEL>(std::stol(tokens.at(1)));
+            auto readerLevel = static_cast<badge::CLEARANCE_LEVEL>(std::stol(tokens.at(1)));
             unsigned int readerId = std::stoul(tokens.at(2));
             bool readerEnabled = std::stol(tokens.at(3));
             std::string readerStart = tokens.at(4);
@@ -142,23 +142,23 @@ void Server::start() {
 
             std::shared_ptr<IReader> reader;
             switch (readerLevel) {
-                case badge::STUDENT:
+                case badge::CLEARANCE_LEVEL::STUDENT:
                     reader = std::make_shared<RoomReader>(readerId, readerName, readerStart, readerEnd);
                     break;
-                case badge::TEACHER:
+                case badge::CLEARANCE_LEVEL::TEACHER:
                     reader = std::make_shared<TeacherReader>(readerId, readerName, readerStart, readerEnd);
                     break;
-                case badge::DOCTOR:
+                case badge::CLEARANCE_LEVEL::DOCTOR:
                     reader = std::make_shared<LabReader>(readerId, readerName, readerStart, readerEnd);
                     break;
-                case badge::CLEANUP:
+                case badge::CLEARANCE_LEVEL::CLEANUP:
                     reader = std::make_shared<CleanupReader>(readerId, readerName, readerStart, readerEnd);
                     break;
-                case badge::STAFF:
+                case badge::CLEARANCE_LEVEL::STAFF:
                     reader = std::make_shared<StaffReader>(readerId, readerName, readerStart, readerEnd);
                     break;
                 default:
-                    throw("Unknown reader type!");
+                    throw std::out_of_range("Unknown reader type!");
             }
 
             if (readerEnabled) {
@@ -168,33 +168,33 @@ void Server::start() {
             readers.insert({readerId, reader});
         } else { // Set the badges up
             if (tokens.size() < 4) {
-                throw("Wrong config file");
+                throw std::runtime_error("Wrong config file");
             }
 
             std::string personName = tokens.at(0);
-            badge::CLEARANCE_LEVEL personLevel = static_cast<badge::CLEARANCE_LEVEL>(std::stol(tokens.at(1)));
+            auto personLevel = static_cast<badge::CLEARANCE_LEVEL>(std::stol(tokens.at(1)));
             unsigned int badgeId = std::stoul(tokens.at(2));
             std::chrono::system_clock::time_point badgeDate = parseDateTime(tokens.at(3));
 
             std::shared_ptr<IPerson> person;
             switch (personLevel) {
-                case badge::STUDENT:
+                case badge::CLEARANCE_LEVEL::STUDENT:
                     person = std::make_shared<Student>(personName);
                     break;
-                case badge::TEACHER:
+                case badge::CLEARANCE_LEVEL::TEACHER:
                     person = std::make_shared<Teacher>(personName);
                     break;
-                case badge::DOCTOR:
+                case badge::CLEARANCE_LEVEL::DOCTOR:
                     person = std::make_shared<Doctor>(personName);
                     break;
-                case badge::CLEANUP:
+                case badge::CLEARANCE_LEVEL::CLEANUP:
                     person = std::make_shared<CleanupStaff>(personName);
                     break;
-                case badge::STAFF:
+                case badge::CLEARANCE_LEVEL::STAFF:
                     person = std::make_shared<Staff>(personName);
                     break;
                 default:
-                    throw("Unknown badge type!");
+                    throw std::out_of_range("Unknown badge type!");
             }
 
             auto badge = std::make_shared<Badge>(badgeId, person);
@@ -212,7 +212,7 @@ void Server::start() {
 
     // Check here if badges and readers are empty, if one is raise an error
     if (badges.empty() || readers.empty()) {
-        throw("Wrong config file!");
+        throw std::runtime_error("Wrong config file!");
     }
 
     running = true;
@@ -226,8 +226,8 @@ void Server::stop() {
     running = false;
 }
 
-void Server::clearError() {
+void Server::clearError(){
     bufferId[0] = -1;
     bufferId[1] = -1;
-    errorId = badge::ERR_NONE;
+    errorId = badge::SERVER_QUERY_ERROR::ERR_NONE;
 }

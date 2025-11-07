@@ -16,7 +16,7 @@ public:
 
     void start();
     void run();
-    int randomInt(int max);
+    template<typename K, typename V> K randomKey(const std::map<K,V>& m);
     void simulate(const std::shared_ptr<Server>& s);
 
     bool isRunning();

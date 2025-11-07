@@ -35,7 +35,7 @@ public:
     void stop();
     void clearError();
 
-    friend std::ostream& operator<<(std::ostream& o, Server& s) {
+    friend std::ostream& operator<<(std::ostream& o, const Server& s) {
         auto tp = std::chrono::system_clock::now();
         std::time_t t = std::chrono::system_clock::to_time_t(tp);
 
@@ -48,17 +48,17 @@ public:
 
         o << "[" << std::put_time(&local, "%Y-%m-%d %H:%M:%S") << "] Server<Name:" << s.getName() << ", Running:" << s.isRunning() << ">";
 
-        unsigned int badgeId = s.bufferId[0];
-        unsigned int readerId = s.bufferId[1];
+        long badgeId = s.bufferId[0];
+        long readerId = s.bufferId[1];
 
         if (badgeId > -1 && readerId > -1) {
-            std::shared_ptr<IBadge> badge = s.getBadges().at(badgeId);
-            std::shared_ptr<IReader> reader = s.getReaders().at(readerId);
+            std::shared_ptr<IBadge> badge = s.badges.at(static_cast<unsigned int>(badgeId));
+            std::shared_ptr<IReader> reader = s.readers.at(static_cast<unsigned int>(readerId));
 
-            o << "\nAcquisition between Badge<Owner:" << badge->getOwner()->getName() << ",Clearance:" << badge->getOwner()->getType() << ">";
-            o << "\nand Reader<Name:" << reader->getName() << ",Clearance:" << reader->getType() << ",Enabled:" << reader->isEnabled() << "> :";
+            o << "\nQuery --> Badge<Owner:" << badge->getOwner()->getName() << ",Clearance:" << badge::getTypeName(badge->getOwner()->getType()) << ">";
+            o << ", Reader<Name:" << reader->getName() << ",Clearance:" << getTypeName(reader->getType()) << ",Enabled:" << reader->isEnabled() << "> --> ";
 
-            if (s.getErrorId() == badge::ERR_NONE) {
+            if (s.getErrorId() == badge::SERVER_QUERY_ERROR::ERR_NONE) {
                 o << "SUCCESS!";
             } else {
                 o << "FAILURE:" << badge::getErrorName(s.getErrorId());
@@ -66,8 +66,6 @@ public:
         }
 
         o << std::endl;
-
-        s.clearError();
 
         return o;
     }

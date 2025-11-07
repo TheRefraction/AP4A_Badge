@@ -35,14 +35,18 @@ int main() {
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 
-    Scheduler scheduler = Scheduler(numSim, sleepTime);
-    scheduler.start();
+    try {
+        Scheduler scheduler = Scheduler(numSim, sleepTime);
+        scheduler.start();
 
-    while (scheduler.isRunning()) {
-        scheduler.run();
+        while (scheduler.isRunning()) {
+            scheduler.run();
+        }
+
+        std::cout << "Done!" << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
     }
-
-    std::cout << "Done!" << std::endl;
 
     return EXIT_SUCCESS;
 }

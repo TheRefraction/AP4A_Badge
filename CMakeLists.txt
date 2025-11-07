@@ -4,6 +4,7 @@ project(AP4A_Projet)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(AP4A_Projet main.cpp
+        const.h
         Server/Server.cpp
         Server/Server.h
         Server/Scheduler.cpp
@@ -11,7 +12,6 @@ add_executable(AP4A_Projet main.cpp
         Person/IPerson.h
         Person/Student.h
         Badge/IBadge.h
-        const.h
         Reader/IReader.h
         Reader/RoomReader.h
         Badge/Badge.cpp
@@ -26,8 +26,6 @@ add_executable(AP4A_Projet main.cpp
         Person/Doctor.h
         Person/CleanupStaff.h
         Person/Staff.h
-        File/fileLib.cpp
-        File/fileLib.h
         Reader/Reader.cpp
         Reader/Reader.h
         Reader/LabReader.h

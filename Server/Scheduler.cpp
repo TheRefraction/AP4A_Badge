@@ -1,7 +1,7 @@
 #include <chrono>
 #include <thread>
-#include <random>
 #include <fstream>
+#include <random>
 
 #include "Scheduler.h"
 
@@ -14,17 +14,21 @@ void Scheduler::start() {
     std::ifstream configFile;
     configFile.open("servers.txt");
 
-    if (!configFile.is_open()) {
-        throw("Could not open file servers.txt");
+    if (configFile.is_open()) {
+        std::string line;
+
+        while (std::getline(configFile, line)) {
+            servers.push_back(std::make_shared<Server>(line));
+        }
+
+        configFile.close();
+    } else throw std::runtime_error("File servers.txt could not be open");
+
+    for (auto &server : servers) {
+        server->start();
     }
 
-    std::string line;
-
-    while (std::getline(configFile, line)) {
-        servers.push_back(std::make_shared<Server>(line));
-    }
-
-    configFile.close();
+    std::cout << "Scheduler started!\n";
 
     running = true;
 }
@@ -32,7 +36,6 @@ void Scheduler::start() {
 void Scheduler::run() {
     if (running) {
         for (const auto& s : servers) {
-            std::cout << s << std::endl;
             if (s->isRunning()) {
                 simulate(s);
             }
@@ -47,44 +50,43 @@ void Scheduler::run() {
     }
 }
 
-int Scheduler::randomInt(const int max) {
+template<typename K, typename V> K Scheduler::randomKey(const std::map<K,V>& m) {
+    if (m.empty()) throw std::runtime_error("Map is empty");
+
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist(0, max);
+    std::uniform_int_distribution<size_t> dist(0, m.size() - 1);
 
-    return dist(gen);
+    size_t index = dist(gen);
+
+    auto it = m.begin();
+    std::advance(it, index);
+
+    return it->first;
 }
 
 void Scheduler::simulate(const std::shared_ptr<Server>& s) {
     // size() est en O(1)
-    const int badgeId = randomInt(s->getBadges().size() - 1);
-    const int readerId = randomInt(s->getReaders().size() - 1);
-
-    std::ofstream file;
-    std::string fileName;
+    const unsigned int badgeId = randomKey(s->getBadges());
+    const unsigned int readerId = randomKey(s->getReaders());
 
     bool success = s->queryAccess(badgeId, readerId);
-    if (success) {
-        fileName = "log_s_" + s->getName() +".log";
-        file.open(fileName, std::ios::out | std::ios::app);
 
-        if (file.is_open()) {
-            file << s;
-        } else std::cout << "Could not open file" << fileName << std::endl;
+    std::string prefix = success ? "log_s_" : "log_f_";
+    std::string fileName = prefix + s->getName() + ".log";
+    std::ofstream file(fileName, std::ios::out | std::ios::app);
+
+    if (file.is_open()) {
+        file << *s;
     } else {
-        fileName = "log_f_" + s->getName() +".log";
-        file.open(fileName, std::ios::out | std::ios::app);
-
-        if (file.is_open()) {
-            file << s;
-        } else std::cout << "Could not open file" << fileName << std::endl;
+        std::cout << "Could not open file " << fileName << std::endl;
     }
 
     file.close();
 
-    std::cout << s;
+    std::cout << *s;
 
-    //s->clearError();
+    s->clearError();
 }
 
 
