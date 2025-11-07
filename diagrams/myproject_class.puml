@@ -1,0 +1,260 @@
+@startuml
+enum "badge::CLEARANCE_LEVEL" as C_0017768600620542483511
+enum C_0017768600620542483511 {
+STUDENT
+TEACHER
+DOCTOR
+CLEANUP
+STAFF
+UNKNOWN
+}
+enum "badge::SERVER_QUERY_ERROR" as C_0010654535698549809181
+enum C_0010654535698549809181 {
+ERR_NONE
+ERR_UNK_BADGE
+ERR_UNK_READER
+ERR_EXPIRED_DATE
+ERR_CLEARANCE
+ERR_READER_TIME
+ERR_READER_DISABLED
+}
+abstract "IPerson" as C_0018360947681417951153
+abstract C_0018360947681417951153 {
++~IPerson() = default : void
+..
+{abstract} +getName() const = 0 : std::string_view
+{abstract} +getType() const = 0 : badge::CLEARANCE_LEVEL
+__
+}
+class "TimeSlot" as C_0011851946485997332248
+class C_0011851946485997332248 {
++TimeSlot(const std::string & startStr, const std::string & endStr) : void
+..
++contains(const std::chrono::system_clock::time_point & tp) const : bool
++overlaps(const TimeSlot & o) const : bool
++toString() const : std::string
+__
++end : std::chrono::system_clock::time_point
++start : std::chrono::system_clock::time_point
+}
+abstract "IBadge" as C_0017925496354049285487
+abstract C_0017925496354049285487 {
++~IBadge() = default : void
+..
+{abstract} +addPermission(unsigned int perm) = 0 : void
+{abstract} +clearPermissions() = 0 : void
+{abstract} +getDate() const = 0 : std::chrono::system_clock::time_point
+{abstract} +getId() const = 0 : unsigned int
+{abstract} +getOwner() const = 0 : std::shared_ptr<IPerson>
+{abstract} +getPermissions() const = 0 : std::set<unsigned int>
+{abstract} +hasPermission(unsigned int perm) const = 0 : bool
+{abstract} +removePermission(unsigned int perm) = 0 : void
+{abstract} +setDate(std::chrono::system_clock::time_point d) = 0 : void
+__
+}
+class "Badge" as C_0002810968424348384376
+class C_0002810968424348384376 {
++Badge(unsigned int id, std::shared_ptr<IPerson> o) : void
+..
++addPermission(unsigned int perm) : void
++clearPermissions() : void
++getDate() const : std::chrono::system_clock::time_point
++getId() const : unsigned int
++getOwner() const : std::shared_ptr<IPerson>
++getPermissions() const : std::set<unsigned int>
++hasPermission(unsigned int perm) const : bool
++removePermission(unsigned int perm) : void
++setDate(std::chrono::system_clock::time_point d) : void
+__
+-date : std::chrono::system_clock::time_point
+-id : unsigned int
+-owner : std::shared_ptr<IPerson>
+-permissions : std::set<unsigned int>
+}
+class "Person" as C_0004672325318720331456
+class C_0004672325318720331456 {
++Person(std::string name) : void
+..
++getName() const : std::string_view
++getType() const : badge::CLEARANCE_LEVEL
+__
+-name : std::string
+}
+abstract "IReader" as C_0003143371707666902735
+abstract C_0003143371707666902735 {
++~IReader() = default : void
+..
+{abstract} +disable() = 0 : void
+{abstract} +enable() = 0 : void
+{abstract} +getAccessTimeSlot() = 0 : TimeSlot &
+{abstract} +getId() const = 0 : unsigned int
+{abstract} +getName() const = 0 : std::string_view
+{abstract} +getType() const = 0 : badge::CLEARANCE_LEVEL
+{abstract} +isEnabled() const = 0 : bool
+__
+}
+class "Reader" as C_0006502691725092047670
+class C_0006502691725092047670 {
++Reader(unsigned int id, std::string name, std::string startTime, std::string endTime) : void
+..
++disable() : void
++enable() : void
++getAccessTimeSlot() : TimeSlot &
++getId() const : unsigned int
++getName() const : std::string_view
++getType() const : badge::CLEARANCE_LEVEL
++isEnabled() const : bool
+__
+-enabled : bool
+-id : unsigned int
+-name : std::string
+-timeSlot : TimeSlot
+}
+class "Server" as C_0006556302699635904946
+class C_0006556302699635904946 {
++Server() : void
++Server(std::string n) : void
++~Server() : void
+..
++clearError() : void
++getBadges() : std::map<unsigned int,std::shared_ptr<IBadge>> &
++getErrorId() const : badge::SERVER_QUERY_ERROR
++getName() const : const std::string &
++getReaders() : std::map<unsigned int,std::shared_ptr<IReader>> &
++isRunning() const : bool
++queryAccess(unsigned int badgeID, unsigned int readerID) : bool
++queryAccess(const IBadge & badge, const IReader & reader) : bool
++start() : void
++stop() : void
+__
+-badges : std::map<unsigned int,std::shared_ptr<IBadge>>
+-bufferId : long[2]
+-errorId : badge::SERVER_QUERY_ERROR
+-name : std::string
+-readers : std::map<unsigned int,std::shared_ptr<IReader>>
+-running : bool
+}
+class "Scheduler" as C_0017498197256667538010
+class C_0017498197256667538010 {
++Scheduler(unsigned int n, unsigned int s) : void
+..
++isRunning() : bool
++randomKey<K,V>(const std::map<K,V> & m) : K
++run() : void
++simulate(const std::shared_ptr<Server> & s) : void
++start() : void
+__
+-numSimulations : unsigned int
+-running : bool
+-servers : std::vector<std::shared_ptr<Server>>
+-sleepTime : unsigned int
+}
+class "Student" as C_0006064682121002694048
+class C_0006064682121002694048 {
++Student(std::string name) : void
+..
++getType() const : badge::CLEARANCE_LEVEL
+__
+}
+class "Teacher" as C_0004662538179627459157
+class C_0004662538179627459157 {
++Teacher(std::string name) : void
+..
++getType() const : badge::CLEARANCE_LEVEL
+__
+}
+class "Doctor" as C_0015807490736833449522
+class C_0015807490736833449522 {
++Doctor(std::string name) : void
+..
++getType() const : badge::CLEARANCE_LEVEL
+__
+}
+class "CleanupStaff" as C_0016965986983636211375
+class C_0016965986983636211375 {
++CleanupStaff(std::string name) : void
+..
++getType() const : badge::CLEARANCE_LEVEL
+__
+}
+class "Staff" as C_0012565184882054698161
+class C_0012565184882054698161 {
++Staff(std::string name) : void
+..
++getType() const : badge::CLEARANCE_LEVEL
+__
+}
+class "RoomReader" as C_0008401285021509904117
+class C_0008401285021509904117 {
++RoomReader(const unsigned int id, std::string name, std::string startTime, std::string endTime) : void
+..
++getType() const : badge::CLEARANCE_LEVEL
+__
+}
+class "TeacherReader" as C_0011658285967784549414
+class C_0011658285967784549414 {
++TeacherReader(const unsigned int id, std::string name, std::string startTime, std::string endTime) : void
+..
++getType() const : badge::CLEARANCE_LEVEL
+__
+}
+class "LabReader" as C_0015319102601165791903
+class C_0015319102601165791903 {
++LabReader(const unsigned int id, std::string name, std::string startTime, std::string endTime) : void
+..
++getType() const : badge::CLEARANCE_LEVEL
+__
+}
+class "CleanupReader" as C_0018012861371760762876
+class C_0018012861371760762876 {
++CleanupReader(const unsigned int id, std::string name, std::string startTime, std::string endTime) : void
+..
++getType() const : badge::CLEARANCE_LEVEL
+__
+}
+class "StaffReader" as C_0015520704559470799402
+class C_0015520704559470799402 {
++StaffReader(const unsigned int id, std::string name, std::string startTime, std::string endTime) : void
+..
++getType() const : badge::CLEARANCE_LEVEL
+__
+}
+C_0018360947681417951153 ..> C_0017768600620542483511
+C_0017925496354049285487 ..> C_0018360947681417951153
+C_0002810968424348384376 --> C_0018360947681417951153 : -owner
+C_0017925496354049285487 <|-- C_0002810968424348384376
+C_0004672325318720331456 ..> C_0017768600620542483511
+C_0018360947681417951153 <|-- C_0004672325318720331456
+C_0003143371707666902735 ..> C_0017768600620542483511
+C_0003143371707666902735 ..> C_0011851946485997332248
+C_0006502691725092047670 ..> C_0017768600620542483511
+C_0006502691725092047670 o-- C_0011851946485997332248 : -timeSlot
+C_0003143371707666902735 <|-- C_0006502691725092047670
+C_0006556302699635904946 o-- C_0010654535698549809181 : -errorId
+C_0006556302699635904946 o-- C_0003143371707666902735 : -readers
+C_0006556302699635904946 o-- C_0017925496354049285487 : -badges
+C_0017498197256667538010 o-- C_0006556302699635904946 : -servers
+C_0006064682121002694048 ..> C_0017768600620542483511
+C_0004672325318720331456 <|-- C_0006064682121002694048
+C_0004662538179627459157 ..> C_0017768600620542483511
+C_0004672325318720331456 <|-- C_0004662538179627459157
+C_0015807490736833449522 ..> C_0017768600620542483511
+C_0004672325318720331456 <|-- C_0015807490736833449522
+C_0016965986983636211375 ..> C_0017768600620542483511
+C_0004672325318720331456 <|-- C_0016965986983636211375
+C_0012565184882054698161 ..> C_0017768600620542483511
+C_0004672325318720331456 <|-- C_0012565184882054698161
+C_0008401285021509904117 ..> C_0017768600620542483511
+C_0006502691725092047670 <|-- C_0008401285021509904117
+C_0011658285967784549414 ..> C_0017768600620542483511
+C_0006502691725092047670 <|-- C_0011658285967784549414
+C_0015319102601165791903 ..> C_0017768600620542483511
+C_0006502691725092047670 <|-- C_0015319102601165791903
+C_0018012861371760762876 ..> C_0017768600620542483511
+C_0006502691725092047670 <|-- C_0018012861371760762876
+C_0015520704559470799402 ..> C_0017768600620542483511
+C_0006502691725092047670 <|-- C_0015520704559470799402
+
+'Generated with clang-uml, version 0.6.2
+'LLVM version clang version 20.1.7 (https://github.com/llvm/llvm-project.git 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+@enduml

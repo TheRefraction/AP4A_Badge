@@ -28,7 +28,7 @@ namespace badge {
         }
     }
 
-    typedef enum class SERVER_QUERY_ERROR {
+    enum class SERVER_QUERY_ERROR {
         ERR_NONE = -1,
         ERR_UNK_BADGE = 0,
         ERR_UNK_READER = 1,

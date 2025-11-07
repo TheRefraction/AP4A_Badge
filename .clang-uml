@@ -1,0 +1,11 @@
+compilation_database_dir: cmake-build-debug
+output_directory: diagrams
+diagrams:
+  myproject_class:
+    type: class
+    glob:
+      - ./**/*.cpp
+      - ./**/*.h
+    exclude:
+      namespaces:
+        - std
