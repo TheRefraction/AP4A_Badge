@@ -1,8 +1,7 @@
-#include <ctime>
-
 #include "Badge.h"
 
-Badge::Badge(const int id, IPerson &o) : id(id), owner(o), date() {}
+Badge::Badge(const int id, IPerson &o, TimeSlot &ts) : id(id), owner(o), date(), timeSlot(ts) {
+}
 
 int Badge::getId() const {
     return id;
@@ -12,15 +11,35 @@ IPerson& Badge::getOwner() const {
     return owner;
 }
 
-time_t Badge::getDate() const {
+std::chrono::system_clock::time_point Badge::getDate() const {
     return date;
 }
 
-std::vector<int> Badge::getPermissions() const {
+TimeSlot& Badge::getAccessTimeSlot() const {
+    return timeSlot;
+}
+
+std::set<int> Badge::getPermissions() const {
     return permissions;
 }
 
-void Badge::setDate(const time_t d) {
+bool Badge::hasPermission(const int perm) const {
+    return permissions.find(perm) != permissions.end();
+}
+
+void Badge::addPermission(const int perm) {
+    permissions.insert(perm);
+}
+
+void Badge::removePermission(const int perm) {
+    permissions.erase(perm);
+}
+
+void Badge::clearPermissions() {
+    permissions.clear();
+}
+
+void Badge::setDate(const std::chrono::system_clock::time_point d) {
     date = d;
 }
 

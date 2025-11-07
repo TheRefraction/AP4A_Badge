@@ -8,11 +8,10 @@ namespace badge {
         DOCTOR = 2,
         CLEANUP = 3,
         STAFF = 4,
-        GUEST = 5,
         UNKNOWN = -1
     } CLEARANCE_LEVEL;
 
-    inline std::string_view getTypeName(CLEARANCE_LEVEL type) {
+    inline auto getTypeName(CLEARANCE_LEVEL type) -> std::string_view {
         switch (type) {
             case STUDENT:
                 return "Student";
@@ -24,8 +23,6 @@ namespace badge {
                 return "Cleanup staff";
             case STAFF:
                 return "Staff";
-            case GUEST:
-                return "Guest";
             default:
                 return "Unknown";
         }

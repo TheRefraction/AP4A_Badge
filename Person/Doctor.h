@@ -1,9 +1,9 @@
-#ifndef __STUDENT_H
-#define __STUDENT_H
+#ifndef __DOCTOR_H
+#define __DOCTOR_H
 
 #include "Person.h"
 
-class Student : public Person {
+class Doctor : public Person {
 public:
     badge::CLEARANCE_LEVEL getType() const override;
 };
